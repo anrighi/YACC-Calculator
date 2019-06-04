@@ -11,6 +11,7 @@
        double value;			//value of an identifier of type NUM
        }
 
+%token SUM
 %token <value>  NUM
 %token IF
 %token <lexeme> ID
@@ -32,6 +33,7 @@ expr  : expr '+' expr  {$$ = $1 + $3;}
       | expr '-' expr  {$$ = $1 - $3;}
       | expr '*' expr  {$$ = $1 * $3;}
       | expr '/' expr  {$$ = $1 / $3;}
+	  | SUM expr	 	{$$ = $2 * ($2 + 1) / 2;}
       | NUM            {$$ = $1;}
       | '-' expr %prec UMINUS {$$ = -$2;}
       ;
