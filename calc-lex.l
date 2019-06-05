@@ -2,6 +2,7 @@
 %{
 #include <stdlib.h>
 #include <string.h>
+#include <math.h>
 %}
 
 DIGIT    [0-9]
@@ -15,8 +16,11 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 
 [ ]     { /* skip blanks */ }
 
+
+[Ss][Qq][Rr][Tt] {return SQRT;}
 [Ss][Uu][Mm] {return SUM;}
 [iI][fF] {return IF;}
+[pP][iI]	{return PI;}
 {NUM}    {yylval.value = atof(yytext);
           return NUM;}
 {ID}     {yylval.lexeme = strdup(yytext);
@@ -26,6 +30,8 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "-"     {return '-';}
 "*"     {return '*';}
 "/"     {return '/';}
+\(		{ return LEFTPARENTHESIS; }
+\)		{ return RIGHTPARENTHESIS; }
 \n      {return '\n';}
   
 
