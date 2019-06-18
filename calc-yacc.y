@@ -32,8 +32,9 @@
 %start line
 
 %%
-line  : expr '\n'      {printf("Result: %f\n", $1); exit(0);}
-      | ID             {printf("Result: %s\n", $1); exit(0);}
+line  : line ';' expr 		{printf("Result: %f\n", $3);}
+      | expr		      	{printf("Result: %f\n", $1); }
+      | error          		{yyerrok; yyclearin;}
       ;
 expr  : expr '+' expr					{$$ = $1 + $3;}
       | expr '-' expr					{$$ = $1 - $3;}
@@ -53,6 +54,8 @@ parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 
 #include "lex.yy.c"
 
+
+#include "lex.yy.c"
 int yyerror (char const *message)
 {
   return fprintf (stderr, "%s\n", message);
@@ -61,7 +64,6 @@ int yyerror (char const *message)
   return 0;
 }
 
-int main(void) 
-{
+int main (void) {
 	yyparse();
 }
