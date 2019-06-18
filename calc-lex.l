@@ -30,6 +30,7 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "-"     {return '-';}
 "*"     {return '*';}
 "/"     {return '/';}
+";"     {return ';';}
 \(		{ return LEFTPARENTHESIS; }
 \)		{ return RIGHTPARENTHESIS; }
 \n      {return '\n';}
