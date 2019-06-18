@@ -30,8 +30,11 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "-"     {return '-';}
 "*"     {return '*';}
 "/"     {return '/';}
+"=="	{return '==';}
 \(		{ return LEFTPARENTHESIS; }
 \)		{ return RIGHTPARENTHESIS; }
+\{		{ return LEFTBRACE;}
+\}		{ return RIGHTBRACE;}
 \n      {return '\n';}
   
 
