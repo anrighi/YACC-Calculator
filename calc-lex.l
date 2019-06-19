@@ -29,12 +29,19 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "PI"				{return PI;}
 "E"					{return E;}
 
-"MeterToFeet"			{return MTOFT;}
-"FeetToMeter"			{return FTTOM;}
-"FeetToInches"			{return FTTOIN;}
-"InchesToFeet"			{return INTOFT;}
-"SqrMeterToSqrFeet"		{return SQMTOSQFT;}
-"SqrFeetToSqrMeter"		{return SQFTTOSQM;}
+"MeterToFeet"				{return MTOFT;}
+"FeetToMeter"				{return FTTOM;}
+"FeetToInches"				{return FTTOIN;}
+"InchesToFeet"				{return INTOFT;}
+"SqrMeterToSqrFeet"			{return SQMTOSQFT;}
+"SqrFeetToSqrMeter"			{return SQFTTOSQM;}
+"CubeMeterToCubeFeet"		{return CUBMTOCUBFT;}
+"CubeFeetToCubeMeter"		{return CUBFTTOCUBM;}
+"CubeMeterToGallons"		{return CUBMTOGAL;}
+"GallonsToCubeMeter"		{return GALTOCUBM;}
+"KmToMiles"					{return KMTOMPH;}
+"MilesToKm"					{return MPHTOKM;}
+
 
 "KelToCel"		{return KELTOCEL;}
 "CelToKel"		{return CELTOKEL;}
