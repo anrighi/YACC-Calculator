@@ -63,7 +63,7 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| E															{$$ = M_E;}
 		| conversionStmt											{$$ = $1;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
-		| ID '=' NUM												{setNode($1, $3); printf("Variable %s set to %f\n", $1, $3);}
+		| ID '=' NUM												{setNode($1, $3);}
 		| ID 														{$$ = getValue($1);}														
 		;
 ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
@@ -123,6 +123,8 @@ void initializeList()
 {
 	head = (struct Node*)malloc(sizeof(struct Node));  
 	head->value = 0; //assign data in first node 
+	strcpy(head->name, "head");
+	head->next = NULL;
 }
 
 void setNode(char inName[], double inValue)
@@ -131,12 +133,12 @@ void setNode(char inName[], double inValue)
 	node = (struct Node*)malloc(sizeof(struct Node));  
 
 	struct Node* n = head;
-	
+		
 	bool found = false;
 	
 	while (n->next != NULL) 
   	{
-  		if (n->name == inName)
+		if (!strcmp(n->name, inName))
 		{
 			n->value = inValue;
 			found = true;
@@ -150,9 +152,11 @@ void setNode(char inName[], double inValue)
 	{
 		node->value = inValue;
 		strcpy(node->name, inName);
+		node->next=NULL;
+		n->next = node;
 	}
 
-	n->next = node;
+	printf("Variable %s set to %f\n", inName, inValue);
 }
 
 double getValue(char inName[])
@@ -163,9 +167,9 @@ double getValue(char inName[])
 	
 	double result = 0;
 		
-	while (n->next != NULL) 
+	while (n != NULL) 
   	{
-  		if (n->name == inName)
+  		if (!strcmp(n->name, inName))
 		{
 			result = n->value;
 			found = true;
@@ -177,11 +181,10 @@ double getValue(char inName[])
 
 	if (!found)
 	{
-		printf("The variable %s has not been set", inName);
+		printf("The variable %s has not been set\n", inName);
 	} 
 	
 	return result;
-	
 }
 
 int main (void) 
