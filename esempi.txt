@@ -1,0 +1,13 @@
+KelToCel(303);
+CelToKel(30);
+CelToFahr(30);
+FahrToCel(86); 
+KelToFahr(303);
+FahrToKel(86);
+
+MeterToFeet(5);
+FeetToMeter(16.4);
+FeetToInches(16.4);
+InchesToFeet(196.8);
+SqrMeterToSqrFeet(5);
+SqrFeetToSqrMeter(54);

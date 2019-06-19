@@ -15,6 +15,8 @@
 %token LEFTPARENTHESIS RIGHTPARENTHESIS
 %token PI E
 %token SUM SQRT COS SIN POW
+%token KELTOCEL CELTOKEL CELTOFAHR FAHRTOCEL KELTOFAHR FAHRTOKEL
+%token MTOFT FTTOM FTTOIN INTOFT SQMTOSQFT SQFTTOSQM
 
 %token <value>  NUM
 %token IF
@@ -24,6 +26,7 @@
 %type <value> condition
 %type <value> ifStmt
 %type <value> parenthesis
+%type <value> conversionStmt
  /* %type <value> line */
 
 %left '-' '+'
@@ -36,7 +39,9 @@
 line  : line expr ';'         {printf("Result: %f\n", $2);}
     | expr ';'                {printf("Result: %f\n", $1); }
     | line ifStmt
-    | ifStmt            
+    | ifStmt  
+    | line conversionStmt ';' {printf("Result: %f\n", $2);}
+    | conversionStmt ';'      {printf("Result: %f\n", $1); }
     | error                 {yyerrok; yyclearin;}
     ;
 expr  : expr '+' expr                       {$$ = $1 + $3;}
@@ -62,7 +67,19 @@ condition : expr '<' expr     {$$=$1<$3?1:0;}
       ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
       ;
-
+conversionStmt  : KELTOCEL   LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 - 273;}
+                | CELTOKEL   LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 + 273;}
+                | CELTOFAHR  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = 9.0 / 5.0 * $3 + 32;}
+                | FAHRTOCEL  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = 5.0 / 9.0 * ($3 - 32);}
+                | KELTOFAHR  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = ((9.0 / 5.0) * ($3 - 273)) + 32;}
+                | FAHRTOKEL  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = 5.0  / 9.0 * ($3 - 32) + 273;}
+                | MTOFT      LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 * 3.28;}
+                | FTTOM      LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 / 3.28 ;}
+                | FTTOIN     LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 * 12;}
+                | INTOFT     LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 / 12.0;}
+                | SQMTOSQFT  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 * 10.764;}
+                | SQFTTOSQM  LEFTPARENTHESIS expr RIGHTPARENTHESIS     {$$ = $3 / 10.764;}
+                ;
 %%
 #include "lex.yy.c"
 int yyerror (char const *message)

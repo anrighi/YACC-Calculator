@@ -29,6 +29,20 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "PI"				{return PI;}
 "E"					{return E;}
 
+"MeterToFeet"			{return MTOFT;}
+"FeetToMeter"			{return FTTOM;}
+"FeetToInches"			{return FTTOIN;}
+"InchesToFeet"			{return INTOFT;}
+"SqrMeterToSqrFeet"		{return SQMTOSQFT;}
+"SqrFeetToSqrMeter"		{return SQFTTOSQM;}
+
+"KelToCel"		{return KELTOCEL;}
+"CelToKel"		{return CELTOKEL;}
+"CelToFahr"		{return CELTOFAHR;}
+"FahrToCel"		{return FAHRTOCEL;}
+"KelToFahr"		{return KELTOFAHR;}
+"FahrToKel"		{return	FAHRTOKEL;}
+
 {NUM}    			{yylval.value = atof(yytext);
 						return NUM;}
 {ID}    			{yylval.lexeme = strdup(yytext);
