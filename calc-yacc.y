@@ -8,13 +8,15 @@
 
 
 %union {
-       char* lexeme;			//identifier
-       double value;			//value of an identifier of type NUM
-       }
+	char* lexeme;			//identifier
+	double value;			//value of an identifier of type NUM
+}
 
 %token LEFTPARENTHESIS RIGHTPARENTHESIS
 %token PI E
 %token SUM SQRT COS SIN POW
+%token KELTOCEL CELTOKEL CELTOFAHR FAHRTOCEL KELTOFAHR FAHRTOKEL
+%token MTOFT FTTOM FTTOIN INTOFT SQMTOSQFT SQFTTOSQM CUBMTOCUBFT CUBFTTOCUBM CUBMTOGAL GALTOCUBM KMTOMPH MPHTOKM
 
 %token <value>  NUM
 %token IF ELSE
@@ -23,6 +25,7 @@
 %type <value> expr
 %type <value> condition
 %type <value> ifStmt
+%type <value> conversionStmt
 %type <value> parenthesis
  /* %type <value> line */
 
@@ -52,6 +55,7 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| NUM														{$$ = $1;}
 		| PI														{$$ = M_PI;}
 		| E															{$$ = M_E;}
+		| conversionStmt											{$$ = $1;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
 		;
 ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
@@ -64,6 +68,25 @@ condition	: expr '<' expr 		{$$=$1<$3?1:0;}
 			| expr '>''=' expr 		{$$=$1>=$4?1:0;}
 			| expr '<''=' expr 		{$$=$1<=$4?1:0;}
 			;
+conversionStmt  : KELTOCEL     parenthesis     {$$ = $2 - 273;}
+                | CELTOKEL     parenthesis     {$$ = $2 + 273;}
+                | CELTOFAHR    parenthesis     {$$ = 9.0 / 5.0 * $2 + 32;}
+                | FAHRTOCEL    parenthesis     {$$ = 5.0 / 9.0 * ($2 - 32);}
+                | KELTOFAHR    parenthesis     {$$ = ((9.0 / 5.0) * ($2 - 273)) + 32;}
+                | FAHRTOKEL    parenthesis     {$$ = 5.0  / 9.0 * ($2 - 32) + 273;}
+                | MTOFT        parenthesis     {$$ = $2 * 3.28;}
+                | FTTOM        parenthesis     {$$ = $2 / 3.28 ;}
+                | FTTOIN       parenthesis     {$$ = $2 * 12;}
+                | INTOFT       parenthesis     {$$ = $2 / 12.0;}
+                | SQMTOSQFT    parenthesis     {$$ = $2 * 10.764;}
+                | SQFTTOSQM    parenthesis     {$$ = $2 / 10.764;}
+                | CUBMTOCUBFT  parenthesis     {$$ = $2 * 35.315;}
+                | CUBFTTOCUBM  parenthesis     {$$ = $2 / 35.315;}
+                | CUBMTOGAL    parenthesis     {$$ = $2 * 219.9;}
+                | GALTOCUBM    parenthesis     {$$ = $2 / 219.9;}
+                | KMTOMPH      parenthesis     {$$ = $2 / 1.6;}
+                | MPHTOKM      parenthesis     {$$ = $2 * 1.6;}
+                ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 			;
 
