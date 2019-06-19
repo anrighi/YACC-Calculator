@@ -4,6 +4,12 @@
 #include <ctype.h>
 #include <stdio.h>
 #include <math.h>
+#include <stdbool.h>
+
+double getValue(char inName[]);
+void initializeList();
+void setNode(char inName[], double inValue);
+
 %}
 
 
@@ -40,6 +46,8 @@ line  : line expr ';'					{printf("Result: %f\n", $2);}
 		| expr ';'				      	{printf("Result: %f\n", $1); }
 		| line ifStmt
 		| ifStmt						
+		| line assignment ';'
+		| assignment ';'
 		| error        					{yyerrok; yyclearin;}
 		;
 expr  : expr '+' expr												{$$ = $1 + $3;}
@@ -57,6 +65,7 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| E															{$$ = M_E;}
 		| conversionStmt											{$$ = $1;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
+		| ID 														{$$ = getValue($1);}														
 		;
 ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
 		| IF condition '{' expr ';' '}' ELSE '{' expr ';' '}'		{if($2) {printf("Result: %f\n", $4);} else {printf("Result: %f\n", $9);} };
@@ -89,10 +98,22 @@ conversionStmt  : KELTOCEL     parenthesis     {$$ = $2 - 273;}
                 ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 			;
+assignment 	: ID '=' NUM							{setNode($1, $3);}
+			;	
+
 
 %%
 
 #include "lex.yy.c"
+
+struct Node 
+{ 
+  struct Node *next; 
+  double value;
+  char name[10];
+};
+
+static struct Node* head; 
 
 int yyerror (char const *message)
 {
@@ -102,6 +123,76 @@ int yyerror (char const *message)
   return 0;
 }
 
-int main (void) {
+void initializeList()
+{
+	head = (struct Node*)malloc(sizeof(struct Node));  
+	head->value = 0; //assign data in first node 
+	strcpy(head->name, "head");
+	head->next = NULL;
+}
+
+void setNode(char inName[], double inValue)
+{
+	struct Node* node = NULL; 
+	node = (struct Node*)malloc(sizeof(struct Node));  
+
+	struct Node* n = head;
+		
+	bool found = false;
+	
+	while (n->next != NULL) 
+  	{
+		if (!strcmp(n->name, inName))
+		{
+			n->value = inValue;
+			found = true;
+			break;
+		}
+  		
+     	n = n->next; 
+  	} 
+
+	if (!found)
+	{
+		node->value = inValue;
+		strcpy(node->name, inName);
+		node->next=NULL;
+		n->next = node;
+	}
+
+	printf("Variable %s set to %f\n", inName, inValue);
+}
+
+double getValue(char inName[])
+{
+	struct Node* n = head;
+	
+	bool found = false;
+	
+	double result = 0;
+		
+	while (n != NULL) 
+  	{
+  		if (!strcmp(n->name, inName))
+		{
+			result = n->value;
+			found = true;
+			break;
+		}
+  		
+     	n = n->next; 
+  	} 
+
+	if (!found)
+	{
+		printf("The variable %s has not been set\n", inName);
+	} 
+	
+	return result;
+}
+
+int main (void) 
+{
+	initializeList();
 	yyparse();
 }
