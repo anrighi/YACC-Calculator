@@ -17,7 +17,7 @@
 %token SUM SQRT COS SIN POW
 
 %token <value>  NUM
-%token IF
+%token IF ELSE
 %token <lexeme> ID
 
 %type <value> expr
@@ -54,11 +54,15 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| E															{$$ = M_E;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
 		;
-ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} };
+ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
+		| IF condition '{' expr ';' '}' ELSE '{' expr ';' '}'		{if($2) {printf("Result: %f\n", $4);} else {printf("Result: %f\n", $9);} };
 condition : LEFTPARENTHESIS condition RIGHTPARENTHESIS {$$=$2;};
 condition	: expr '<' expr 		{$$=$1<$3?1:0;}
 			| expr '>' expr 		{$$=$1>$3?1:0;}
-			| expr '=' expr 		{$$=$1==$3?1:0;}
+			| expr '=''=' expr 		{$$=$1==$4?1:0;}
+			| expr '!''=' expr 		{$$=$1!=$4?1:0;}
+			| expr '>''=' expr 		{$$=$1>=$4?1:0;}
+			| expr '<''=' expr 		{$$=$1<=$4?1:0;}
 			;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 			;
