@@ -46,6 +46,8 @@ line  : line expr ';'					{printf("Result: %f\n", $2);}
 		| expr ';'				      	{printf("Result: %f\n", $1); }
 		| line ifStmt
 		| ifStmt						
+		| line assignment ';'
+		| assignment ';'
 		| error        					{yyerrok; yyclearin;}
 		;
 expr  : expr '+' expr												{$$ = $1 + $3;}
@@ -63,7 +65,6 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| E															{$$ = M_E;}
 		| conversionStmt											{$$ = $1;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
-		| ID '=' NUM												{setNode($1, $3);}
 		| ID 														{$$ = getValue($1);}														
 		;
 ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
@@ -97,6 +98,9 @@ conversionStmt  : KELTOCEL     parenthesis     {$$ = $2 - 273;}
                 ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 			;
+assignment 	: ID '=' NUM							{setNode($1, $3);}
+			;	
+
 
 %%
 
