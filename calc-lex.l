@@ -11,7 +11,6 @@ NUM      {DIGIT}+(\.{DIGIT}+)?
 LETTER   [a-zA-Z]
 ID       {LETTER}({LETTER}|{DIGIT})*
 
-
 %%
 
 [ ]     { /* skip blanks */ }
@@ -20,14 +19,16 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 
 
 [iI][fF]		 	{return IF;}
+[eE][lL][sS][eE] 	{return ELSE;}
 
-"SQRT"				{return SQRT;}
-"SUM" 				{return SUM;}
-"COS"				{return COS;}
-"SIN" 				{return SIN;}
-"POW" 				{return POW;}
-"PI"				{return PI;}
-"E"					{return E;}
+[sS][qQ][rR][tT]	{return SQRT;}
+[sS][uU][mM]		{return SUM;}
+[cC][oO][sS]		{return COS;}
+[sS][iI][nN] 		{return SIN;}
+[pP][oO][wW]		{return POW;}
+
+[pP][iI]			{return PI;}
+[eE]				{return E;}
 
 {NUM}    			{yylval.value = atof(yytext);
 						return NUM;}
@@ -44,6 +45,7 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 "<"  			   	{return '<';}
 ">"  			   	{return '>';}
 "="  			   	{return '=';}
+"!"  			   	{return '!';}
 
 
 "{"  			   	{return '{';}
