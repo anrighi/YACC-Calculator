@@ -8,25 +8,22 @@
 
 
 %union {
-       char* lexeme;			//identifier
-       double value;			//value of an identifier of type NUM
+       char* lexeme;      //identifier
+       double value;      //value of an identifier of type NUM
        }
 
 %token LEFTPARENTHESIS RIGHTPARENTHESIS
-%token LEFTBRACE RIGHTBRACE
-%token PI
-%token SUM
-%token SQRT
+%token PI E
+%token SUM SQRT COS SIN POW
 
 %token <value>  NUM
 %token IF
-%token ELSE
 %token <lexeme> ID
 
 %type <value> expr
+%type <value> condition
+%type <value> ifStmt
 %type <value> parenthesis
-%type <value> brace
-%type <value> ifStatement
  /* %type <value> line */
 
 %left '-' '+'
@@ -36,34 +33,38 @@
 %start line
 
 %%
-line  : expr '\n'      {printf("Result: %f\n", $1); exit(0);}
-      | ID             {printf("Result: %s\n", $1); exit(0);}
-      | ifStatement    {printf("Result: %f\n", $1); exit(0);}
-      ;
-expr  : expr '+' expr					{$$ = $1 + $3;}
-      | expr '-' expr					{$$ = $1 - $3;}
-      | expr '*' expr					{$$ = $1 * $3;}
-      | expr '/' expr  					{$$ = $1 / $3;}
-      | expr '==' expr        {$$= $1 == $3;}
-  	  | SQRT parenthesis				{$$ = sqrt($2);}
-  	  | SUM parenthesis					{$$ = $2 * ($2 + 1) / 2;}
-  	  | parenthesis						{$$ = $1;}
-      | brace                 {$$ = $1;}
-      | NUM								{$$ = $1;}
-	    | PI								{$$ = 3.1415;}
-      | '-' expr %prec UMINUS {$$ = -$2;}
+line  : line expr ';'         {printf("Result: %f\n", $2);}
+    | expr ';'                {printf("Result: %f\n", $1); }
+    | line ifStmt
+    | ifStmt            
+    | error                 {yyerrok; yyclearin;}
+    ;
+expr  : expr '+' expr                       {$$ = $1 + $3;}
+    | expr '-' expr                       {$$ = $1 - $3;}
+    | expr '*' expr                       {$$ = $1 * $3;}
+    | expr '/' expr                       {$$ = $1 / $3;}
+    | SQRT parenthesis                      {$$ = sqrt($2);}
+    | COS parenthesis                     {$$ = cos($2);}
+    | SIN parenthesis                     {$$ = sin($2);}
+    | POW LEFTPARENTHESIS expr ',' expr RIGHTPARENTHESIS    {$$ = pow($3, $5);}
+    | SUM parenthesis                     {$$ = $2 * ($2 + 1) / 2;}
+    | parenthesis                       {$$ = $1;}
+    | NUM                           {$$ = $1;}
+    | PI                            {$$ = M_PI;}
+    | E                             {$$ = M_E;}
+    | '-' expr %prec UMINUS                   {$$ = -$2;}
+    ;
+ifStmt  : IF condition '{' expr ';' '}'               {if($2) {printf("Result: %f\n", $4);} };
+condition : LEFTPARENTHESIS condition RIGHTPARENTHESIS {$$=$2;};
+condition : expr '<' expr     {$$=$1<$3?1:0;}
+      | expr '>' expr     {$$=$1>$3?1:0;}
+      | expr '=' expr     {$$=$1==$3?1:0;}
       ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
-			;
-brace : LEFTBRACE expr RIGHTBRACE {$$ = $2;}
       ;
-ifStatement : IF brace
-            | IF brace ELSE brace
-            ;
+
 %%
-
 #include "lex.yy.c"
-
 int yyerror (char const *message)
 {
   return fprintf (stderr, "%s\n", message);
@@ -71,9 +72,6 @@ int yyerror (char const *message)
   fputc ('\n', stderr);
   return 0;
 }
-
-int main(void) 
-{
-  printf("Welcome to YACC Calculator\n");
-	yyparse();
+int main (void) {
+  yyparse();
 }
