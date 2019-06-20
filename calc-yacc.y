@@ -98,7 +98,7 @@ conversionStmt  : KELTOCEL     parenthesis     {$$ = $2 - 273;}
                 ;
 parenthesis : LEFTPARENTHESIS expr RIGHTPARENTHESIS {$$ = $2;}
 			;
-assignment 	: ID '=' NUM							{setNode($1, $3);}
+assignment 	: ID '=' expr							{setNode($1, $3);}
 			;	
 
 
