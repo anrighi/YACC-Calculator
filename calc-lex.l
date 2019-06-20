@@ -20,6 +20,8 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 
 [iI][fF]		 	{return IF;}
 [eE][lL][sS][eE] 	{return ELSE;}
+[aA][nN][dD]		{return AND;}
+[oO][rR]			{return OR;}
 
 [sS][qQ][rR][tT]	{return SQRT;}
 [sS][uU][mM]		{return SUM;}

@@ -25,7 +25,7 @@ void setNode(char inName[], double inValue);
 %token MTOFT FTTOM FTTOIN INTOFT SQMTOSQFT SQFTTOSQM CUBMTOCUBFT CUBFTTOCUBM CUBMTOGAL GALTOCUBM KMTOMPH MPHTOKM
 
 %token <value>  NUM
-%token IF ELSE
+%token IF ELSE AND OR
 %token <lexeme> ID
 
 %type <value> expr
@@ -70,7 +70,9 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
 		| IF condition '{' expr ';' '}' ELSE '{' expr ';' '}'		{if($2) {printf("Result: %f\n", $4);} else {printf("Result: %f\n", $9);} };
 condition : LEFTPARENTHESIS condition RIGHTPARENTHESIS {$$=$2;};
-condition	: expr '<' expr 		{$$=$1<$3?1:0;}
+condition	: condition AND condition		{$$ = $1 && $3;}
+			| condition OR condition		{$$ = $1 || $3;}
+			| expr '<' expr 		{$$=$1<$3?1:0;}
 			| expr '>' expr 		{$$=$1>$3?1:0;}
 			| expr '=''=' expr 		{$$=$1==$4?1:0;}
 			| expr '!''=' expr 		{$$=$1!=$4?1:0;}

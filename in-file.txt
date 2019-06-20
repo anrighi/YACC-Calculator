@@ -46,3 +46,12 @@ MilesToKm(31);
 if(10 == MilesToKm(KmToMiles(10))) {
 	1;
 }
+
+a=8; b=7; a; b; a+b; a=19; a; a+b;
+if(a==19) {
+	100;
+}
+if(1==1 AND 2==3 OR (2==1 OR 1==1)) {
+	99;
+}
+a=a+1;
