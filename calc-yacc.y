@@ -152,14 +152,20 @@ void setNode(char inName[], double inValue)
 		}
   		
      	n = n->next; 
-  	} 
+  	}
 
 	if (!found)
 	{
-		node->value = inValue;
-		strcpy(node->name, inName);
-		node->next=NULL;
-		n->next = node;
+		if (!strcmp(n->name, inName))
+		{
+			n->value = inValue;
+			found = true;
+		} else {
+			node->value = inValue;
+			strcpy(node->name, inName);
+			node->next=NULL;
+			n->next = node;
+		}
 	}
 
 	printf("Variable %s set to %f\n", inName, inValue);
