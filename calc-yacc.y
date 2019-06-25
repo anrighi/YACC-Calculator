@@ -29,7 +29,7 @@ void setNode(char inName[], double inValue);
 %token <lexeme> ID
 
 %type <value> expr
-%type <value> condition
+%type <value> condition evalOp
 %type <value> ifStmt
 %type <value> conversionStmt
 %type <value> parenthesis
@@ -37,6 +37,7 @@ void setNode(char inName[], double inValue);
 
 %left '-' '+'
 %left '*' '/'
+%left AND OR
 %right UMINUS
 
 %start line
@@ -67,18 +68,22 @@ expr  : expr '+' expr												{$$ = $1 + $3;}
 		| '-' expr %prec UMINUS										{$$ = -$2;}
 		| ID 														{$$ = getValue($1);}														
 		;
-ifStmt	: IF condition '{' expr ';' '}'								{if($2) {printf("Result: %f\n", $4);} }
-		| IF condition '{' expr ';' '}' ELSE '{' expr ';' '}'		{if($2) {printf("Result: %f\n", $4);} else {printf("Result: %f\n", $9);} };
-condition : LEFTPARENTHESIS condition RIGHTPARENTHESIS {$$=$2;};
-condition	: condition AND condition		{$$ = $1 && $3;}
-			| condition OR condition		{$$ = $1 || $3;}
-			| expr '<' expr 		{$$=$1<$3?1:0;}
+
+ifStmt	: IF LEFTPARENTHESIS condition RIGHTPARENTHESIS '{' expr ';' '}'								{if($3) {printf("Result: %f\n", $6);} }
+		| IF LEFTPARENTHESIS condition RIGHTPARENTHESIS '{' expr ';' '}' ELSE '{' expr ';' '}'			{if($3) {printf("Result: %f\n", $6);} else {printf("Result: %f\n", $11);} };
+evalOp	: expr '<' expr 		{$$=$1<$3?1:0;}
 			| expr '>' expr 		{$$=$1>$3?1:0;}
 			| expr '=''=' expr 		{$$=$1==$4?1:0;}
 			| expr '!''=' expr 		{$$=$1!=$4?1:0;}
 			| expr '>''=' expr 		{$$=$1>=$4?1:0;}
 			| expr '<''=' expr 		{$$=$1<=$4?1:0;}
 			;
+condition : LEFTPARENTHESIS condition RIGHTPARENTHESIS {$$ = $2;}
+		| evalOp {$$=$1;} 
+		| condition AND condition		{$$ = $1 && $3;}
+		| condition OR condition		{$$ = $1 || $3;}
+		;
+		
 conversionStmt  : KELTOCEL     parenthesis     {$$ = $2 - 273;}
                 | CELTOKEL     parenthesis     {$$ = $2 + 273;}
                 | CELTOFAHR    parenthesis     {$$ = 9.0 / 5.0 * $2 + 32;}
@@ -159,8 +164,9 @@ void setNode(char inName[], double inValue)
 		if (!strcmp(n->name, inName))
 		{
 			n->value = inValue;
-			found = true;
-		} else {
+		}
+		else
+		{
 			node->value = inValue;
 			strcpy(node->name, inName);
 			node->next=NULL;

@@ -1,57 +1,28 @@
-if(3>4) {
+a = 1;
+b = 3.3;
+a = x;
+
+r = 8;
+circ = 2 * r * PI;
+area = pow(r,2) * PI;
+sqrt(area / PI);
+
+if(area > 20) {
+	20;
+} 
+
+areaFt = SqrMeterToSqrFeet(area);
+
+rExp = FeetToMeter(sqrt(areaFt / PI));
+
+if(rExp - r < 0.01 AND rExp - r > -0.01) {
 	1;
 } else {
-	3;
+	0;
 }
 
-sqrt(PI*4/100);
-
-sqrt(POW(4,2));
-
-if(E<PI) {
-	POW(E*PI,2);
-}
-
-if(1!=2) {
-	-10*(3-1)+(((1+2)*3)/(4-5));
-}
-
-KelToCel(303);
-CelToKel(30);
-
-CelToFahr(30);
-FahrToCel(86);
-
-KelToFahr(303);
-FahrToKel(86);
-
-MeterToFeet(5);
-FeetToMeter(16.4);
-
-FeetToInches(16.4);
-InchesToFeet(196.8);
-
-SqrMeterToSqrFeet(5);
-SqrFeetToSqrMeter(54);
-
-CubeMeterToCubeFeet(5);
-CubeFeetToCubeMeter(176.5);
-
-CubeMeterToGallons(50);
-GallonsToCubeMeter(10998.44);
-
-KmToMiles(50);
-MilesToKm(31);
-
-if(10 == MilesToKm(KmToMiles(10))) {
+if(1!=1) {
 	1;
+} else {
+	0;
 }
-
-a=8; b=7; a; b; a+b; a=19; a; a+b;
-if(a==19) {
-	100;
-}
-if(1==1 AND 2==3 OR (2==1 OR 1==1)) {
-	99;
-}
-a=a+1;

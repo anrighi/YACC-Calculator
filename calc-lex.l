@@ -29,8 +29,8 @@ ID       {LETTER}({LETTER}|{DIGIT})*
 [sS][iI][nN] 		{return SIN;}
 [pP][oO][wW]		{return POW;}
 
-[pP][iI]			{return PI;}
-[eE]				{return E;}
+"PI"			{return PI;}
+"E"				{return E;}
 
 "MeterToFeet"				{return MTOFT;}
 "FeetToMeter"				{return FTTOM;}
