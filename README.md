@@ -1,10 +1,10 @@
 # Extended Calculator
-Final project for the Formal Languages and Compiler Course.
+Final project for the Formal Languages and Compiler Course, Free University of Bozen.
 
 Authors:
-	Andrea Righi
-	Cristiano Lucian
-	Matteo Messmer
+	Andrea Righi,
+	Cristiano Lucian,
+	Matteo Messmer.
  
 What can this calculator do?
 - Mathematical Expressions, 4 operations and parethesis
